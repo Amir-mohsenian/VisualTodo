@@ -78,7 +78,7 @@ dependencies {
 
 
     //Hilt
-    val hilt_version = "2.44"
+    val hilt_version = "2.48"
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
     testImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
@@ -94,6 +94,10 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //Immutable-list
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
+
 }
 
 kapt {
