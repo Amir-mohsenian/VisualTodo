@@ -1,10 +1,12 @@
 package com.photo.mahsa.data
 
 import com.photo.mahsa.ui.model.Task
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 object FakeRepository: Repository {
-    override suspend fun loadTasks(): List<Task> {
-        return tasksTestData
+    override fun loadTasks(): Flow<List<Task>> {
+        return flowOf(tasksTestData)
     }
 }
 

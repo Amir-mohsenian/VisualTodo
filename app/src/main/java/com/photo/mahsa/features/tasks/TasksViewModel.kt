@@ -2,36 +2,39 @@ package com.photo.mahsa.features.tasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.photo.mahsa.data.Repository
+import com.photo.mahsa.result.Result
+import com.photo.mahsa.result.asResult
 import com.photo.mahsa.ui.model.Task
+import com.photo.mahsa.usecase.GetTasksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
-    private val repository: Repository
+    private val getTasksUseCase: GetTasksUseCase
 ): ViewModel() {
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState = _uiState.asStateFlow()
-
-    fun loadTasks() {
-        _uiState.update { it.copy(loading = true) }
-        viewModelScope.launch {
-            val tasks = repository.loadTasks()
-            _uiState.update { it.copy(tasks = tasks.toImmutableList(), loading = false) }
+    val tasksUiState: StateFlow<GetTasksUiState> = getTasksUseCase().asResult().map { result ->
+        when (result) {
+            is Result.Loading -> GetTasksUiState.Loading
+            is Result.Error -> GetTasksUiState.LoadFailed
+            is Result.Success -> GetTasksUiState.Success(result.data)
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = GetTasksUiState.Loading
+    )
 }
 
-data class UiState(
-    val loading: Boolean = false,
-    val errorMessage: String? = null,
-    val tasks: ImmutableList<Task> = persistentListOf()
-)
+sealed interface GetTasksUiState {
+    data object Loading: GetTasksUiState
+
+    data object LoadFailed: GetTasksUiState
+
+    data class Success(
+        val tasks: List<Task> = emptyList()) : GetTasksUiState
+}
