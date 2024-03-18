@@ -80,8 +80,6 @@ dependencies {
     ksp("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
     testImplementation ("androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version")
 
-
-  //  ksp
     //Hilt
     val hilt_version = "2.50"
     implementation("com.google.dagger:hilt-android:$hilt_version")
@@ -91,7 +89,15 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
     kspAndroidTest("com.google.dagger:hilt-android-compiler:$hilt_version")
 
+    //Room
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    testImplementation("androidx.room:room-testing:$room_version")
 
+    //Basic Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
