@@ -105,6 +105,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
 
     //Immutable-list
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
