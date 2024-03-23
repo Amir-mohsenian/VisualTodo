@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.photo.mahsa.database.dao.TaskDao
 import com.photo.mahsa.database.model.TaskEntity
 
-@Database(entities = [TaskEntity::class], version = 1)
+@Database(entities = [TaskEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
 }

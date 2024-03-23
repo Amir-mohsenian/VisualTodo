@@ -1,7 +1,7 @@
 package com.photo.mahsa.usecase
 
 import com.photo.mahsa.data.Repository
-import com.photo.mahsa.ui.model.Task
+import com.photo.mahsa.model.Task
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

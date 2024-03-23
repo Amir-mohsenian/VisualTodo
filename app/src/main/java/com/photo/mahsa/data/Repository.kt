@@ -3,7 +3,7 @@ package com.photo.mahsa.data
 import com.photo.mahsa.database.dao.TaskDao
 import com.photo.mahsa.database.model.TaskEntity
 import com.photo.mahsa.database.model.asExternalModel
-import com.photo.mahsa.ui.model.Task
+import com.photo.mahsa.model.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

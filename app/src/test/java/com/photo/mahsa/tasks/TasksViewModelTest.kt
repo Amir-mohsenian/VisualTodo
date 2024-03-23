@@ -1,10 +1,9 @@
 package com.photo.mahsa.tasks
 
-import com.photo.mahsa.data.FakeRepository
 import com.photo.mahsa.data.tasksTestData
 import com.photo.mahsa.features.tasks.GetTasksUiState
 import com.photo.mahsa.features.tasks.TasksViewModel
-import com.photo.mahsa.ui.model.Task
+import com.photo.mahsa.model.TaskPriority
 import com.photo.mahsa.usecase.GetTasksUseCase
 import com.photo.mahsa.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,7 +28,7 @@ class TasksViewModelTest {
 
     @Before
     fun setup() {
-        whenever(getTasksUseCase.invoke()).thenReturn(flowOf(tasksTestData))
+        whenever(getTasksUseCase.invoke()).thenReturn(flowOf(tasksTestData.shuffled()))
         viewModel = TasksViewModel(getTasksUseCase)
     }
 
@@ -44,7 +43,18 @@ class TasksViewModelTest {
         assertTrue(viewModel.tasksUiState.value is GetTasksUiState.Success)
         val tasks = (viewModel.tasksUiState.value as GetTasksUiState.Success).tasks
         verify(getTasksUseCase).invoke()
-        assertEquals(2, tasks.size)
+        assertEquals(tasksTestData.size, tasks.size)
+        collectJob.cancel()
+    }
+
+    @Test
+    fun sortTasksToPriorityWhenUserRequested() = runTest {
+        val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.tasksUiState.collect() }
+        viewModel.sortTasksByPriority()
+        assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[0].priority == TaskPriority.HIGH)
+        assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[1].priority == TaskPriority.MEDIUM)
+        assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[2].priority == TaskPriority.LOW)
+        assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[3].priority == TaskPriority.LOW)
         collectJob.cancel()
     }
 }
