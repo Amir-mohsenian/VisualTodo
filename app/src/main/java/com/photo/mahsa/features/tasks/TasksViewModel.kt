@@ -35,7 +35,7 @@ class TasksViewModel @Inject constructor(
                     val tasks = if (sortedByPriority) {
                         tasksResult.data.sortedBy { it.priority }
                     } else if (sortedByDateTime) {
-                        tasksResult.data.sortedBy { it.timestamp }
+                        tasksResult.data.sortedBy { it.timestamp }.reversed()
                     } else {
                         tasksResult.data
                     }

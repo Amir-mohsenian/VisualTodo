@@ -48,13 +48,23 @@ class TasksViewModelTest {
     }
 
     @Test
-    fun sortTasksToPriorityWhenUserRequested() = runTest {
+    fun sortTasksByPriority() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.tasksUiState.collect() }
         viewModel.sortTasksByPriority()
         assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[0].priority == TaskPriority.HIGH)
         assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[1].priority == TaskPriority.MEDIUM)
         assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[2].priority == TaskPriority.LOW)
         assertTrue((viewModel.tasksUiState.value as GetTasksUiState.Success).tasks[3].priority == TaskPriority.LOW)
+        collectJob.cancel()
+    }
+
+    @Test
+    fun sortTasksByTimestamp() = runTest {
+        val collectJob = launch(UnconfinedTestDispatcher()) { viewModel.tasksUiState.collect() }
+        viewModel.sortTasksByDateTime()
+        val tasks = (viewModel.tasksUiState.value as GetTasksUiState.Success).tasks
+        assertTrue(tasks[0].timestamp > tasks[1].timestamp)
+        assertTrue(tasks[0].timestamp > tasks[2].timestamp)
         collectJob.cancel()
     }
 }
