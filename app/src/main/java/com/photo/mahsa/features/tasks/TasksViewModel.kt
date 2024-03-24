@@ -24,7 +24,7 @@ class TasksViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Result.Loading)
 
     private val sortedByPriority = MutableStateFlow(false)
-    private val sortedByDateTime = MutableStateFlow(false)
+    private val sortedByDateTime = MutableStateFlow(true)
 
     val tasksUiState: StateFlow<GetTasksUiState> =
         combine(tasks, sortedByPriority, sortedByDateTime) { tasksResult, sortedByPriority, sortedByDateTime ->
@@ -39,7 +39,7 @@ class TasksViewModel @Inject constructor(
                     } else {
                         tasksResult.data
                     }
-                    GetTasksUiState.Success(tasks)
+                    GetTasksUiState.Success(tasks, sortPriority = sortedByPriority, sortDateTime = sortedByDateTime)
                 }
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), GetTasksUiState.Loading)
@@ -61,6 +61,8 @@ sealed interface GetTasksUiState {
     data object LoadFailed : GetTasksUiState
 
     data class Success(
-        val tasks: List<Task> = emptyList()
+        val tasks: List<Task> = emptyList(),
+        val sortPriority: Boolean = false,
+        val sortDateTime: Boolean = true
     ) : GetTasksUiState
 }
