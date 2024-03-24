@@ -46,7 +46,11 @@ fun TasksRoute(
 ) {
     val uiState by viewModel.tasksUiState.collectAsStateWithLifecycle()
 
-
+    TasksScreen(
+        uiState = uiState,
+        onSortByPriority = viewModel::sortTasksByPriority,
+        onSortByDateTime = viewModel::sortTasksByDateTime,
+        onEditTask = {onEditTask()})
 }
 
 @Composable
