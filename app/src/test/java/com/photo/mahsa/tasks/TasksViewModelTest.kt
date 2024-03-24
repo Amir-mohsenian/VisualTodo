@@ -16,14 +16,20 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Assert.*
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 
 @ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class TasksViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val getTasksUseCase = mock<GetTasksUseCase>()
+    @Mock
+    private lateinit var getTasksUseCase: GetTasksUseCase
+
     private lateinit var viewModel: TasksViewModel
 
     @Before
