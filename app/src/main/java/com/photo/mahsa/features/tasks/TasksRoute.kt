@@ -98,7 +98,7 @@ fun TasksScreen(
                     TaskItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(92.dp), item = item
+                            .height(140.dp), item = item
                     ) { task ->
                         onEditTask(task)
                     }
@@ -190,7 +190,7 @@ private fun TasksScreenPreview() {
                 listOf(
                     Task(
                         id = 1,
-                        title = "Short Title",
+                        title = "Short Title 1",
                         desc = "Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description ",
                         image = null,
                         priority = TaskPriority.MEDIUM,
@@ -198,7 +198,7 @@ private fun TasksScreenPreview() {
                     ),
                     Task(
                         id = 2,
-                        title = "Short Title",
+                        title = "Short Title 2",
                         desc = "Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description ",
                         image = null,
                         priority = TaskPriority.MEDIUM,
@@ -206,7 +206,7 @@ private fun TasksScreenPreview() {
                     ),
                     Task(
                         id = 3,
-                        title = "Short Title",
+                        title = "Short Title 3",
                         desc = "Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description ",
                         image = null,
                         priority = TaskPriority.MEDIUM,
@@ -214,7 +214,7 @@ private fun TasksScreenPreview() {
                     ),
                     Task(
                         id = 4,
-                        title = "Short Title",
+                        title = "Short Title 4",
                         desc = "Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description Long Description ",
                         image = null,
                         priority = TaskPriority.MEDIUM,

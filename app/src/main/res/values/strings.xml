@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mahsa</string>
+    <string name="app_name">Visual Todo</string>
 
     <string name="title_sort_priority">Priority</string>
     <string name="title_sort_date_time">Date</string>
