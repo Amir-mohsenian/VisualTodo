@@ -4,4 +4,5 @@
     <string name="title_sort_priority">Priority</string>
     <string name="title_sort_date_time">Date</string>
     <string name="title_empty_list">Empty List</string>
+    <string name="message_add_task_validation">Task is not valid</string>
 </resources>
