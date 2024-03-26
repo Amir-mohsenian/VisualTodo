@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
@@ -24,13 +27,14 @@ import androidx.compose.material.icons.filled.CameraEnhance
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.LinearScale
 import androidx.compose.material.icons.filled.RecordVoiceOver
-import androidx.compose.material.icons.filled.Verified
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material.icons.twotone.Add
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
@@ -52,11 +57,16 @@ import java.io.File
 @Composable
 fun AddTaskRoute(
     viewModel: AddTaskViewModel,
-    onBackAction: () -> Unit,
-    onSubmit: () -> Unit
+    onBackAction: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    if (uiState.isAdded) {
+        LaunchedEffect(uiState) {
+            onBackAction()
+        }
+    }
 
     var galleryPath: String? by remember {
         mutableStateOf(null)
@@ -159,16 +169,6 @@ fun AddTaskScreen(
         mutableStateOf("")
     }
 
-    var imagePath: String by remember {
-        mutableStateOf("")
-    }
-
-    val priorityIcon = remember {
-        derivedStateOf {
-
-        }
-    }
-
     Column(modifier = Modifier.fillMaxSize()) {
         OutlinedTextField(
             modifier = Modifier
@@ -178,56 +178,11 @@ fun AddTaskScreen(
             onValueChange = setTitle,
             placeholder = { Text(text = "title") },
             singleLine = true,
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            )
         )
-
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, start = 12.dp, end = 12.dp)
-                .border(width = 1.dp, shape = MaterialTheme.shapes.small, color = Color.LightGray)
-                .fillMaxWidth()
-                .padding(top = 12.dp, bottom = 12.dp, start = 12.dp, end = 12.dp)
-        ) {
-            Icon(
-                modifier = Modifier.clickable { onImageClick() },
-                imageVector = Icons.Default.Image,
-                contentDescription = null,
-                tint = if (!pickedGallery) Color.LightGray else Color.Green
-            )
-
-            Icon(
-                modifier = Modifier
-                    .padding(start = 32.dp)
-                    .clickable { onCameraClick() },
-                imageVector = Icons.Default.CameraEnhance,
-                contentDescription = null,
-                tint = if (!pickedCamera) Color.LightGray else Color.Green
-            )
-
-            Icon(
-                modifier = Modifier.padding(start = 32.dp),
-                imageVector = Icons.Default.RecordVoiceOver,
-                contentDescription = null,
-                tint = Color.LightGray
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            val (priorityIcon, priorityColor) = when (priority) {
-                TaskPriority.LOW -> Icons.Default.ArrowDownward to Color.Green
-                TaskPriority.MEDIUM -> Icons.Default.LinearScale to Color.Yellow
-                TaskPriority.HIGH -> Icons.Default.ArrowUpward to Color.Red
-            }
-
-            Icon(
-                modifier = Modifier
-                    .padding(start = 32.dp)
-                    .clickable { onPriorityClick() },
-                imageVector = priorityIcon,
-                contentDescription = null,
-                tint = priorityColor
-            )
-        }
 
         OutlinedTextField(
             modifier = Modifier
@@ -237,29 +192,143 @@ fun AddTaskScreen(
             value = desc,
             onValueChange = setDesc,
             placeholder = { Text(text = "Description") },
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onSubmit(title, desc) }
+            )
         )
 
-        ElevatedCard(
+        Box(
             modifier = Modifier
-                .padding(top = 24.dp)
-                .align(Alignment.CenterHorizontally)
-                .size(160.dp)
-                .clickable { onSubmit(title, desc) },
-            shape = CircleShape
+                .weight(1f)
+                .fillMaxWidth(), contentAlignment = Alignment.Center
         ) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            ElevatedButton(
+                onClick = { onSubmit(title, desc) },
+                modifier = Modifier.size(180.dp),
+                shape = CircleShape
+            ) {
                 Icon(
-                    imageVector = Icons.Default.Verified,
+                    imageVector = Icons.TwoTone.Add,
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(92.dp)
-
+                    modifier = Modifier.size(92.dp)
                 )
-
             }
         }
 
+        AddMediaBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = 8.dp,
+                    bottom = 8.dp,
+                    start = 12.dp,
+                    end = 12.dp
+                ),
+            paddingValues = PaddingValues(
+                start = 12.dp,
+                end = 12.dp,
+                bottom = 24.dp
+            ),
+            hasGalleryImage = pickedGallery,
+            hasCameraImage = pickedCamera,
+            hasVoice = false,
+            priority = priority,
+            onGalleryClick = onImageClick,
+            onCameraClick = onCameraClick,
+            onVoiceClick = { },
+            onPriorityClick = onPriorityClick
+        )
+    }
+
+}
+
+@Composable
+private fun AddMediaBar(
+    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
+    hasGalleryImage: Boolean,
+    hasCameraImage: Boolean,
+    hasVoice: Boolean,
+    priority: TaskPriority,
+    onGalleryClick: () -> Unit,
+    onCameraClick: () -> Unit,
+    onVoiceClick: () -> Unit,
+    onPriorityClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(paddingValues)
+            .border(
+                width = 1.dp,
+                shape = MaterialTheme.shapes.small,
+                color = Color.LightGray
+            )
+            .then(modifier)
+    ) {
+        Icon(
+            modifier = Modifier.clickable { onGalleryClick() },
+            imageVector = Icons.Default.Image,
+            contentDescription = null,
+            tint = if (!hasGalleryImage) Color.LightGray else Color.Green
+        )
+
+        Icon(
+            modifier = Modifier
+                .padding(start = 32.dp)
+                .clickable { onCameraClick() },
+            imageVector = Icons.Default.CameraEnhance,
+            contentDescription = null,
+            tint = if (!hasCameraImage) Color.LightGray else Color.Green
+        )
+
+        Icon(
+            modifier = Modifier
+                .padding(start = 32.dp)
+                .clickable { onVoiceClick() },
+            imageVector = Icons.Default.RecordVoiceOver,
+            contentDescription = null,
+            tint = if (!hasVoice) Color.LightGray else Color.Green
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        val (priorityIcon, priorityColor) = when (priority) {
+            TaskPriority.LOW -> Icons.Default.ArrowDownward to Color.Green
+            TaskPriority.MEDIUM -> Icons.Default.LinearScale to Color.Yellow
+            TaskPriority.HIGH -> Icons.Default.ArrowUpward to Color.Red
+        }
+
+        Icon(
+            modifier = Modifier
+                .padding(start = 32.dp)
+                .clickable { onPriorityClick() },
+            imageVector = priorityIcon,
+            contentDescription = null,
+            tint = priorityColor
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddMediaBarPreview() {
+    MahsaTheme {
+        AddMediaBar(
+            modifier = Modifier.padding(8.dp),
+            paddingValues = PaddingValues(start = 12.dp, end = 12.dp, bottom = 12.dp, top = 8.dp),
+            hasGalleryImage = true,
+            hasCameraImage = false,
+            hasVoice = true,
+            priority = TaskPriority.HIGH,
+            onGalleryClick = { /*TODO*/ },
+            onCameraClick = { /*TODO*/ },
+            onVoiceClick = { /*TODO*/ }) {
+
+        }
     }
 }
 

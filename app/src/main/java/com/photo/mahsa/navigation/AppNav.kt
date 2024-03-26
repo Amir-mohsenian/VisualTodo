@@ -38,8 +38,9 @@ fun AppNavHost(
         composable(Screens.AddTask.route) {
             AddTaskRoute(
                 viewModel = hiltViewModel(),
-                onBackAction = {},
-                onSubmit = {}
+                onBackAction = {
+                    navController.popBackStack(Screens.AddTask.route, true)
+                }
             )
         }
 

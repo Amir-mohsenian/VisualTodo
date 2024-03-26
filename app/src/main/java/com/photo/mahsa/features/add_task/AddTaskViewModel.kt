@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.photo.mahsa.R
 import com.photo.mahsa.model.Task
+import com.photo.mahsa.result.Result
 import com.photo.mahsa.usecase.AddTaskUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,12 @@ class AddTaskViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            addTaskUseCase(task)
+            val result = addTaskUseCase(task)
+            if (result is Result.Success) {
+                _uiState.update { it.copy(isAdded = true) }
+            } else {
+                _uiState.update { it.copy(isAdded = false, errorMessage = R.string.error_add_task) }
+            }
         }
     }
 }
