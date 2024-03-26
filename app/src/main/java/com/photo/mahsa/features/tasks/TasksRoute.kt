@@ -94,7 +94,7 @@ fun TasksScreen(
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                itemsIndexed(uiState.tasks, key = {index, item ->  item.id}) {index, item ->
+                itemsIndexed(uiState.tasks, key = {index, item ->  item.id!! }) {index, item ->
                     TaskItem(
                         modifier = Modifier
                             .fillMaxWidth()

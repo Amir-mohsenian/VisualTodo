@@ -29,7 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.photo.mahsa.navigation.AppNavHost
+import com.photo.mahsa.navigation.Screens
 import com.photo.mahsa.ui.theme.MahsaTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -78,7 +80,11 @@ class MainActivity : ComponentActivity() {
                                 })
                         }, floatingActionButton = {
                             FloatingActionButton(onClick = {
-                                // navigate to add task
+                                navController.navigate(
+                                    Screens.AddTask.route,
+                                    navOptions = navOptions {
+                                        launchSingleTop = true
+                                    })
                             }) {
                                 Icon(
                                     imageVector = Icons.TwoTone.AddCircle,
@@ -86,6 +92,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }) { innerPadding ->
+
                         Surface(
                             modifier = Modifier
                                 .padding(innerPadding)

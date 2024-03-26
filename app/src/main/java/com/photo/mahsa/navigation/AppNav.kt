@@ -2,6 +2,7 @@ package com.photo.mahsa.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,7 +36,11 @@ fun AppNavHost(
         }
 
         composable(Screens.AddTask.route) {
-            AddTaskRoute()
+            AddTaskRoute(
+                viewModel = hiltViewModel(),
+                onBackAction = {},
+                onSubmit = {}
+            )
         }
 
         composable(Screens.EditTask.route) {

@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 data class Task(
-    val id: Long,
+    val id: Long? = null,
     val title: String,
     val desc: String,
     val image: Bitmap? = null,
