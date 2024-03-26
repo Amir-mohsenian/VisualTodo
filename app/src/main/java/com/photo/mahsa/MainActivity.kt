@@ -22,7 +22,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -47,6 +51,14 @@ class MainActivity : ComponentActivity() {
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
 
+                var isOnMainScreen by remember {
+                    mutableStateOf(true)
+                }
+
+                navController.addOnDestinationChangedListener { _, destination, _ ->
+                    isOnMainScreen = destination.route == Screens.Tasks.route
+                }
+
                 ModalNavigationDrawer(
                     drawerContent = {
                         ModalDrawerSheet(
@@ -69,27 +81,31 @@ class MainActivity : ComponentActivity() {
                                 title = {
                                     Text(text = stringResource(id = R.string.app_name))
                                 }, navigationIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Menu,
-                                        contentDescription = null,
-                                        modifier = Modifier.clickable {
-                                            scope.launch {
-                                                if (drawerState.isClosed) drawerState.open()
-                                            }
-                                        })
+                                    if (isOnMainScreen) {
+                                        Icon(
+                                            imageVector = Icons.Default.Menu,
+                                            contentDescription = null,
+                                            modifier = Modifier.clickable {
+                                                scope.launch {
+                                                    if (drawerState.isClosed) drawerState.open()
+                                                }
+                                            })
+                                    }
                                 })
                         }, floatingActionButton = {
-                            FloatingActionButton(onClick = {
-                                navController.navigate(
-                                    Screens.AddTask.route,
-                                    navOptions = navOptions {
-                                        launchSingleTop = true
-                                    })
-                            }) {
-                                Icon(
-                                    imageVector = Icons.TwoTone.AddCircle,
-                                    contentDescription = null
-                                )
+                            if (isOnMainScreen) {
+                                FloatingActionButton(onClick = {
+                                    navController.navigate(
+                                        Screens.AddTask.route,
+                                        navOptions = navOptions {
+                                            launchSingleTop = true
+                                        })
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.TwoTone.AddCircle,
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         }) { innerPadding ->
 
