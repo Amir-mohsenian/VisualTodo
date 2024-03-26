@@ -1,6 +1,9 @@
 package com.photo.mahsa.model
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 
 data class Task(
     val id: Long,
@@ -14,4 +17,7 @@ data class Task(
     fun isValid(): Boolean {
         return !(title.isEmpty() && desc.isEmpty() && image == null && imagePath.isNullOrEmpty())
     }
+
+    var titleState by mutableStateOf(title)
+    var descState by mutableStateOf(desc)
 }
